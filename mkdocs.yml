@@ -1,0 +1,58 @@
+site_name: My Docs
+site_url: 
+
+theme:
+  name: material
+
+  font:
+    code: JetBrains Mono
+    text: JetBrains Mono
+  palette:
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/weather-sunny
+        name: 调至深色
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/weather-night
+        name: 调至浅色
+  features:
+    - content.action.edit
+    - content.code.copy
+    - navigation.tracking
+    - navigation.expand
+    - navigation.top
+    - navigation.footer
+
+nav:
+  - 首页: index.md
+  - 专业必修: 
+      - 计算机系统Ⅰ: sys1.md
+      - 信息安全原理与数学基础: 信息安全原理与数学基础.md
+      #- 高级数据结构与算法分析: ads.md
+      - 计算机系统Ⅱ: sys2.md
+      - 数据安全与密码学基础: 数据安全与密码学基础.md
+      #- 计算机系统Ⅲ: sys3.md
+      #- 隐私计算与数据合规: 隐私计算与数据合规.md
+      #- 计算机网络: 计算机网络.md
+      #- 软件安全原理和实践: 软件安全原理和实践.md
+      #- 系统安全原理与实践: 系统安全原理与实践.md
+      #- 网络安全原理与实践: 网络安全原理与实践.md
+      #- 无线与物联网安全基础: 无线与物联网安全基础.md
+  - 专业选修:
+      - 应用基础类: 
+        #- 汇编语言: 汇编语言.md
+        - 网络空间安全导论: 网络空间安全导论.md
+        - 数据库系统: db.md
+        #- 面向信息安全的信号处理: 面向信息安全的信号处理.md
+        #- 多媒体安全: 多媒体安全.md
+      - 实践拓展类:
+        - 社交网络安全与隐私: 社交网络安全与隐私.md
+  #- 实践教学:
+      #- CTF101: CTF101.md
+  #- 专业进阶: 
