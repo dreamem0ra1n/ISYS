@@ -1,5 +1,5 @@
 site_name: ISYS
-site_url: https://dreamem0ra1n.github.io/
+site_url: https://dreamem0ra1n.github.io/ISYS/
 
 theme:
   name: material
@@ -30,7 +30,7 @@ theme:
     - navigation.footer
 
 nav:
-  - 首页: index.md
+  - 首页: 首页.md
   - 专业必修: 
       - 计算机系统Ⅰ: 专业必修/计算机系统Ⅰ.md
       - 信息安全原理与数学基础: 专业必修/信息安全原理与数学基础.md
