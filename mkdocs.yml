@@ -1,9 +1,12 @@
 site_name: ISYS
-site_url: https://dreamem0ra1n.github.io/ISYS/
+site_url: https://dreamem0ra1n.github.io/ISYS
+repo_url: https://github.com/dreamem0ra1n/ISYS
+repo_name: ISYS
 
 theme:
   name: material
-
+  icon:
+    repo: fontawesome/brands/github
   font:
     code: JetBrains Mono
     text: JetBrains Mono
@@ -30,7 +33,7 @@ theme:
     - navigation.footer
 
 nav:
-  - 首页: 首页.md
+  - 首页: index.md
   - 专业必修: 
       - 计算机系统Ⅰ: 专业必修/计算机系统Ⅰ.md
       - 信息安全原理与数学基础: 专业必修/信息安全原理与数学基础.md
@@ -38,7 +41,7 @@ nav:
       - 计算机系统Ⅱ: 专业必修/计算机系统Ⅱ.md
       - 数据安全与密码学基础: 专业必修/数据安全与密码学基础.md
       - 计算机系统Ⅲ: 专业必修/计算机系统Ⅲ.md
-      #- 隐私计算与数据合规: 
+      - 隐私计算与数据合规: 专业必修/隐私计算与数据合规.md
       #- 计算机网络: 
       #- 软件安全原理和实践: 
       #- 系统安全原理与实践: 
@@ -53,6 +56,6 @@ nav:
         #- 多媒体安全: 
       - 实践拓展类:
         - 社交网络安全与隐私: 专业选修/实践拓展类/社交网络安全与隐私.md
-  #- 实践教学:
-      #- CTF101: CTF101.md
+  - 实践教学:
+      - CTF101: 实践教学/信息安全课程综合实践(CTF101).md
   #- 专业进阶: 
