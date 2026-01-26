@@ -20,7 +20,7 @@ nav:
       - 无线与物联网安全基础: 专业必修/无线与物联网安全基础.md
   - 专业选修:
       - 应用基础类: 
-        - 汇编语言: 专业选修/应用基础类/汇编语言.md
+        - 汇编语言程序设计与调试: 专业选修/应用基础类/汇编语言程序设计与调试.md
         - 网络空间安全导论: 专业选修/应用基础类/网络空间安全导论.md
         - 数据库系统: 专业选修/应用基础类/数据库系统.md
         - 面向信息安全的信号处理: 专业选修/应用基础类/面向信息安全的信号处理.md
@@ -40,7 +40,6 @@ nav:
 
 theme:
   name: material
-  custom_dir: overrides
   icon:
     repo: fontawesome/brands/github
   font:
@@ -69,8 +68,6 @@ plugins:
       enable_creation_date: false
 
 
-extra:
-  show_page_views: true
 
 markdown_extensions:
   - admonition
