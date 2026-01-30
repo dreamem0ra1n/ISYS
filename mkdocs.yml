@@ -72,6 +72,7 @@ plugins:
       timezone: Asia/Shanghai
       locale: zh
       enable_creation_date: false
+  - macros
 
 
 
