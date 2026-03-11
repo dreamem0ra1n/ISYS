@@ -43,6 +43,8 @@ nav:
       - 编译原理: 专业进阶/编译原理.md
       - 人工智能安全: 专业进阶/人工智能安全.md
       - 深度合成技术与电子取证: 专业进阶/深度合成技术与电子取证.md
+  - 杂项:
+      - 更新记录和计划: 杂项/更新记录和计划.md
 
 theme:
   name: material
@@ -72,9 +74,9 @@ plugins:
       timezone: Asia/Shanghai
       locale: zh
       enable_creation_date: false
+  - changelog:
+      file: changelog.yml
   - macros
-
-
 
 markdown_extensions:
   - admonition
