@@ -1,3 +1,6 @@
+---
+comments: true
+---
 # Welcome to ISYS！
 ## 前言
 本站(ISYS)旨在整合一些信安(is)专业课的相关资源！

@@ -48,6 +48,7 @@ nav:
 
 theme:
   name: material
+  custom_dir: overrides
   icon:
     repo: fontawesome/brands/github
   font:
@@ -84,3 +85,11 @@ markdown_extensions:
   - pymdownx.tabbed:
       alternate_style: true
   - pymdownx.superfences
+
+extra_css:
+  - css/changelog.css
+
+extra:
+  comments:
+    enabled: true # 启用评论
+    mode: giscus # 使用 Giscus 作为评论系统
