@@ -67,6 +67,7 @@ theme:
     - navigation.expand
     - navigation.top
     - navigation.footer
+    - tags
 
 plugins:
   - search
@@ -88,6 +89,7 @@ markdown_extensions:
 
 extra_css:
   - css/changelog.css
+  - css/style.css
 
 extra:
   comments:

@@ -1,5 +1,5 @@
 .changelog-type-refactor {
-    background-color: #85cae5b0;
+    background-color: #09f56fb0;
 }
 .changelog-type-refactor::before {
     content: "文档重构";
