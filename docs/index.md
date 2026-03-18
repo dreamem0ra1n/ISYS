@@ -74,3 +74,10 @@ i sys！计算机系统我们拥护你（？
 - 查老师
 - 前辈们在网络上公开的资料
 
+## 本地渲染文档
+
+文档采用了[mkdocs-material](https://squidfunk.github.io/mkdocs-material/)工具构建和部署。如果想在本地渲染：
+```
+pip install -r requirements.txt
+mkdocs serve
+```
