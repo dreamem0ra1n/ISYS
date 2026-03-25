@@ -36,6 +36,12 @@
 }
 
 /* 针对不同标签类型的颜色 */
+.course-tags .tag.tag-basic {
+    background-color: #eceff1;
+    border-color: #546e7a;
+    color: #546e7a;
+}
+
 .course-tags .tag.tag-required {
     background-color: #e3f2fd;
     border-color: #1976d2;
@@ -82,4 +88,10 @@
     background-color: #fbe9e7;
     border-color: #c78774;
     color: #d84315;
+}
+
+.course-tags .tag.tag-number {
+    background-color: #efebe9;
+    border-color: #8d6e63;
+    color: #8d6e63;
 }

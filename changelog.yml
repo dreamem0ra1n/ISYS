@@ -1,4 +1,7 @@
 - "2026":
+  - "2026-03-25":
+    - newpage: 专业基础课程：oop、fds
+    - function: 增加了课程号的tag
   - "2026-03-17":
     - refactor: 页面结构调整
     - function: 增加了课程类别/课程学分/课程地点三类tag
