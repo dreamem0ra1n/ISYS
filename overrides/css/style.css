@@ -1,7 +1,23 @@
 /* 调整 h1 和 h2 标题边距 */
-.md-typeset h1 {
-    margin-bottom: 0.5em !important;
+.md-typeset h1.page-title {
+  margin-bottom: 0.5em !important;
 }
+
+.md-typeset h1.page-title .page-title-en {
+  display: block;
+  font-size: 0.56em;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--md-default-fg-color--light);
+  margin-bottom: 0.25em;
+}
+
+.md-typeset h1.page-title .page-title-zh {
+  display: block;
+}
+
 
 .md-typeset h2 {
     margin-top: 0.2em !important;

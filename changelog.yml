@@ -1,4 +1,7 @@
 - "2026":
+  - "2026-04-15":
+    - refactor: 课程增加了英文名称
+    - newpage: 信息安全管理
   - "2026-03-25":
     - newpage: 专业基础课程：oop、fds
     - function: 增加了课程号的tag
