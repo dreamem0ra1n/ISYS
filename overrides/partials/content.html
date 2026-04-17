@@ -6,7 +6,7 @@
 {% if "\u003ch1" not in page.content %}
   <h1 class="page-title">
     {% if page.meta and page.meta.en_title %}
-      <span class="page-title-en">{{ page.meta.en_title }}</span><br />
+      <span class="page-title-en">{{ page.meta.en_title }}</span>
     {% endif %}
     <span class="page-title-zh">{{ page.title | d(config.site_name, true) }}</span>
   </h1>
