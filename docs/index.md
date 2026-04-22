@@ -80,7 +80,7 @@ i sys！计算机系统我们拥护你（？
 
 ## 本地渲染文档
 
-文档采用了[mkdocs-material](https://squidfunk.github.io/mkdocs-material/)工具构建和部署。如果想在本地渲染：
+文档采用了[mkdocs-material](https://squidfunk.github.io/mkdocs-material/)工具构建和部署。如果想在本地渲染，请把仓库clone至本地后在根目录下执行：
 ```
 pip install -r requirements.txt
 mkdocs serve
