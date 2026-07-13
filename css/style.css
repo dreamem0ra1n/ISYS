@@ -1,0 +1,113 @@
+/* 调整 h1 和 h2 标题边距 */
+.md-typeset h1.page-title {
+  margin-bottom: 0.5em !important;
+}
+
+.md-typeset h1.page-title .page-title-en {
+  display: block;
+  font-size: 0.56em;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--md-default-fg-color--light);
+  margin-bottom: 0.25em;
+}
+
+.md-typeset h1.page-title .page-title-zh {
+  display: block;
+}
+
+
+.md-typeset h2 {
+    margin-top: 0.2em !important;
+    margin-bottom: 0.2em !important;
+}
+
+/* 课程标签样式 */
+.course-tags {
+    margin: 8px 0 16px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.course-tags .tag {
+    display: inline-block;
+    padding: 4px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 16px;
+    background-color: var(--md-typeset-table-background);
+    border: 1px solid var(--md-default-fg-color--light);
+    color: var(--md-default-fg-color);
+    transition: all 0.2s ease;
+}
+
+.course-tags .tag:hover {
+    background-color: var(--md-primary-fg-color);
+    color: var(--md-primary-bg-color);
+    border-color: var(--md-primary-fg-color);
+    cursor: default;
+}
+
+/* 针对不同标签类型的颜色 */
+.course-tags .tag.tag-basic {
+    background-color: #eceff1;
+    border-color: #546e7a;
+    color: #546e7a;
+}
+
+.course-tags .tag.tag-required {
+    background-color: #e3f2fd;
+    border-color: #1976d2;
+    color: #1976d2;
+}
+
+.course-tags .tag.tag-advanced {
+    background-color: #f3e5f5;
+    border-color: #7b1fa2;
+    color: #7b1fa2;
+}
+
+.course-tags .tag.tag-practice {
+    background-color: #e8f5e9;
+    border-color: #388e3c;
+    color: #388e3c;
+}
+
+.course-tags .tag.tag-elective-practice {
+    background-color: #fff3e0;
+    border-color: #f57c00;
+    color: #f57c00;
+}
+
+.course-tags .tag.tag-elective-basic {
+    background-color: #fce4ec;
+    border-color: #c2185b;
+    color: #c2185b;
+}
+
+.course-tags .tag.tag-location-yq {
+    background-color: #e1f5fe;
+    border-color: #0288d1;
+    color: #0288d1;
+}
+
+.course-tags .tag.tag-location-zjg {
+    background-color: #f9fbe7;
+    border-color: #afb42b;
+    color: #afb42b;
+}
+
+.course-tags .tag.tag-credit {
+    background-color: #fbe9e7;
+    border-color: #c78774;
+    color: #d84315;
+}
+
+.course-tags .tag.tag-number {
+    background-color: #efebe9;
+    border-color: #8d6e63;
+    color: #8d6e63;
+}
