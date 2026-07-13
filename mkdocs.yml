@@ -82,9 +82,8 @@ plugins:
       timezone: Asia/Shanghai
       locale: zh
       enable_creation_date: false
-  - changelog:
-      file: changelog.yml
-  - macros
+  - macros:
+      module_name: scripts/main
 
 markdown_extensions:
   - admonition
@@ -94,7 +93,6 @@ markdown_extensions:
   - pymdownx.superfences
 
 extra_css:
-  - css/changelog.css
   - css/style.css
 
 extra:
