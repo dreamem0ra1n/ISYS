@@ -1,0 +1,66 @@
+{
+  "title": "示例课程",
+  "en_title": "Sample Course",
+  "category": "专业选修-应用基础",
+  "credits": 4,
+  "location": "紫金港",
+  "course_number": "CS0000M",
+  "recommended_semester": "大二春夏",
+  "notes": [
+    "这里可以填写普通 note；整个 notes 字段可以省略",
+    {
+      "type": "warning",
+      "title": "这里可以填写重要警告"
+    }
+  ],
+  "description": "摘自教务网：\n\n> 这里填写课程简介。description 支持直接书写 Markdown。",
+  "teachers": [
+    {
+      "term": "25春夏",
+      "items": [
+        "教师甲",
+        "教师乙"
+      ]
+    }
+  ],
+  "textbooks": [
+    "教材名称；没有教材时也可以直接填写字符串“无教材”"
+  ],
+  "grading": [
+    {
+      "term": "25春夏，教师甲班",
+      "items": [
+        "作业 20%",
+        {
+          "text": "实验 30%",
+          "items": [
+            "实验一 10%",
+            "实验二 20%"
+          ]
+        },
+        "期末考试 50%"
+      ]
+    }
+  ],
+  "resources": {
+    "links": [
+      {
+        "title": "课程网站",
+        "url": "https://example.com/course",
+        "description": "课程资料与通知"
+      },
+      "也可以直接写一条 Markdown 文本"
+    ],
+    "exams": [
+      {
+        "term": "25春夏",
+        "items": [
+          {
+            "title": "期末回忆卷",
+            "url": "https://example.com/exam"
+          }
+        ]
+      }
+    ]
+  }
+}
