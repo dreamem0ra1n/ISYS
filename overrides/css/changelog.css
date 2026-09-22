@@ -4,3 +4,29 @@
 .changelog-type-refactor::before {
     content: "文档重构";
 }
+
+/* 更新记录中每条提交的作者头像 */
+.md-typeset .changelog-avatar {
+    display: inline-block;
+    width: 0.9rem;
+    height: 0.9rem;
+    margin-right: 0.35rem;
+    border-radius: 50%;
+    object-fit: cover;
+    vertical-align: -0.14rem;
+    background-color: var(--md-default-fg-color--lightest);
+    box-shadow: 0 0 0 0.05rem var(--md-default-fg-color--lightest);
+}
+
+/* 无法解析到远程头像时使用的首字母头像 */
+.md-typeset .changelog-avatar-letter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 0.52rem;
+    font-weight: 700;
+    line-height: 1;
+    text-transform: uppercase;
+    user-select: none;
+}

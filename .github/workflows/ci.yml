@@ -29,3 +29,6 @@ jobs:
             mkdocs-material-
       - run: pip install -r requirements.txt
       - run: mkdocs gh-deploy --force
+        env:
+          # 供更新记录的提交头像查询使用，避免匿名调用 GitHub API 触发速率限制
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
