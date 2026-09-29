@@ -6,6 +6,8 @@ on:
       - main
 permissions:
   contents: write
+  pages: write
+  id-token: write
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -13,22 +15,14 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Configure Git Credentials
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-node@v4
         with:
-          python-version: 3.x
-      - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV 
-      - uses: actions/cache@v4
+          node-version: 22
+      - run: npm ci
+      - run: node quartz/bootstrap-cli.mjs plugin install --from-config
+      - run: npm run build
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
         with:
-          key: mkdocs-material-${{ env.cache_id }}
-          path: ~/.cache 
-          restore-keys: |
-            mkdocs-material-
-      - run: pip install -r requirements.txt
-      - run: mkdocs gh-deploy --force
-        env:
-          # 供更新记录的提交头像查询使用，避免匿名调用 GitHub API 触发速率限制
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          path: public
+      - uses: actions/deploy-pages@v4

@@ -3,8 +3,16 @@ __pycache__/
 *.py[cod]
 .codex
 
-# MkDocs
-site/
+# Quartz / Node
+node_modules/
+public/
+.cache/
+*.tsbuildinfo
+.quartz/
+.DS_Store
 
-# 敏感信息
+# Sensitive source data
 data/
+
+# Legacy MkDocs output
+site/

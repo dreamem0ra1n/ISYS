@@ -15,26 +15,20 @@ from typing import Any
 if __package__:
     from .build_course_md import (
         DEFAULT_DOCS_DIR,
-        DEFAULT_MKDOCS_CONFIG,
         PROJECT_DIR,
         BuildError,
         atomic_write,
-        nav_bounds,
         output_path,
-        parse_nav_item,
         parse_yaml_scalar,
         read_text,
     )
 else:
     from build_course_md import (
         DEFAULT_DOCS_DIR,
-        DEFAULT_MKDOCS_CONFIG,
         PROJECT_DIR,
         BuildError,
         atomic_write,
-        nav_bounds,
         output_path,
-        parse_nav_item,
         parse_yaml_scalar,
         read_text,
     )
@@ -60,23 +54,19 @@ TAB_PATTERN = re.compile(r'^===\s+"(.*?)"\s*$', flags=re.MULTILINE)
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="把 docs 中的课程 Markdown 导出为保持相同层级的 JSON 文件。",
+        description="把 content 中的课程 Markdown 导出为保持相同层级的 JSON 文件。",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
         "inputs",
         nargs="*",
         type=Path,
-        help="课程 Markdown；不指定时扫描 docs 下所有课程页面",
+        help="课程 Markdown；不指定时扫描 content 下所有课程页面",
     )
-    parser.add_argument("--docs-dir", type=Path, default=DEFAULT_DOCS_DIR)
-    parser.add_argument("--data-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
     parser.add_argument(
-        "--mkdocs-config",
-        type=Path,
-        default=DEFAULT_MKDOCS_CONFIG,
-        help="用于保留自定义导航标题",
+        "--content-dir", "--docs-dir", dest="docs_dir", type=Path, default=DEFAULT_DOCS_DIR
     )
+    parser.add_argument("--data-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
     parser.add_argument(
         "--check",
         action="store_true",
@@ -152,12 +142,23 @@ def parse_header_notes(markdown: str) -> tuple[str | None, list[Any]]:
     header = markdown[: first_section.start()] if first_section else markdown
     recommended = None
     notes: list[Any] = []
-    pattern = re.compile(
+    legacy_pattern = re.compile(
         r'^!!!\s+([A-Za-z][A-Za-z0-9_-]*)\s+"(.*?)"\s*$',
         re.MULTILINE,
     )
-    matches = list(pattern.finditer(header))
-    for match in matches:
+    blockquote_pattern = re.compile(
+        r'^>\s*\[!([A-Za-z][A-Za-z0-9_-]*)\]\s*(.*?)\s*$',
+        re.MULTILINE,
+    )
+    matches = [
+        (match.start(), "legacy", match)
+        for match in legacy_pattern.finditer(header)
+    ] + [
+        (match.start(), "blockquote", match)
+        for match in blockquote_pattern.finditer(header)
+    ]
+    matches.sort(key=lambda item: item[0])
+    for _, syntax, match in matches:
         admonition_type = match.group(1)
         title = html.unescape(match.group(2))
         recommended_match = re.fullmatch(
@@ -170,7 +171,17 @@ def parse_header_notes(markdown: str) -> tuple[str | None, list[Any]]:
 
         content_lines = []
         for line in header[match.end() :].splitlines()[1:]:
-            if line.startswith("    "):
+            if syntax == "blockquote":
+                if line.startswith("> [!"):
+                    break
+                if line == ">":
+                    if content_lines:
+                        content_lines.append("")
+                elif line.startswith("> "):
+                    content_lines.append(line[2:])
+                elif line.strip():
+                    break
+            elif line.startswith("    "):
                 content_lines.append(line[4:])
             elif line.startswith("\t"):
                 content_lines.append(line[1:])
@@ -416,21 +427,9 @@ def parse_teachers(value: str, grading: str) -> list[dict[str, Any]]:
     ]
 
 
-def nav_titles(config: str) -> dict[str, str]:
-    lines = config.splitlines()
-    start, end = nav_bounds(lines)
-    result = {}
-    for line in lines[start + 1 : end]:
-        item = parse_nav_item(line)
-        if item and item[2]:
-            result[item[2]] = item[1]
-    return result
-
-
 def parse_course(
     path: Path,
     docs_dir: Path,
-    navigation: dict[str, str],
 ) -> dict[str, Any]:
     markdown = read_text(path, "课程 Markdown")
     if '<div class="course-tags">' not in markdown:
@@ -439,9 +438,6 @@ def parse_course(
     data = parse_front_matter(markdown, path)
     data.update(parse_tags(markdown))
     relative_page = path.resolve().relative_to(docs_dir.resolve()).as_posix()
-    nav_title = navigation.get(relative_page)
-    if nav_title and nav_title != data["title"]:
-        data["nav_title"] = nav_title
 
     recommended, notes = parse_header_notes(markdown)
     if recommended:
@@ -485,14 +481,13 @@ def find_inputs(paths: list[Path], docs_dir: Path) -> list[Path]:
     return sorted(
         path
         for path in docs_dir.rglob("*.md")
-        if "杂项" not in path.relative_to(docs_dir).parts
-        and '<div class="course-tags">' in path.read_text(encoding="utf-8")
+        if path.name != "template.md"
+        if '<div class="course-tags">' in path.read_text(encoding="utf-8")
     )
 
 
 def json_path(markdown: Path, docs_dir: Path, data_dir: Path) -> Path:
-    relative = markdown.resolve().relative_to(docs_dir.resolve())
-    return (data_dir / relative).with_suffix(".json")
+    return (data_dir / markdown.name).with_suffix(".json")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -501,11 +496,10 @@ def main(argv: list[str] | None = None) -> int:
     if not inputs:
         raise BuildError("没有找到课程 Markdown")
 
-    navigation = nav_titles(read_text(args.mkdocs_config, "MkDocs 配置"))
     jobs = []
     for source in inputs:
         try:
-            data = parse_course(source, args.docs_dir, navigation)
+            data = parse_course(source, args.docs_dir)
             destination = json_path(source, args.docs_dir, args.data_dir)
         except (BuildError, ValueError) as exc:
             raise BuildError(f"{source}: {exc}") from exc

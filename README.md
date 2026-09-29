@@ -2,22 +2,40 @@
 
 `@dreamem0ra1n`自建的`zju-is`课程资源站
 
+## 项目结构
+
+| 路径 | 用途 |
+| --- | --- |
+| `content/` | 课程、杂项等页面 |
+| `src/components/`、`src/styles/` | ISYS 自己的导航组件和样式 |
+| `quartz/` | Quartz 构建引擎，站点定制尽量放在 `src/` |
+| `scripts/` | 课程数据转换和构建辅助脚本 |
+| `data/` | 本地课程 JSON，默认不纳入 Git |
+| `quartz.ts`、`quartz.config.yaml` | Quartz 要求位于根目录的入口与站点配置 |
+
+`node_modules/`、`public/`、`.quartz/` 和 `.cache/` 都是可重新生成的产物，已加入 `.gitignore`。根目录的 `package.json`、`package-lock.json`、`tsconfig.json`、`.node-version` 和 `.npmrc` 分别用于依赖、TypeScript 和 Node 环境。
+
 ## 本地预览
 
-安装依赖并启动 MkDocs：
+安装 Node.js 依赖并启动 Quartz：
 
 ```bash
-pip install -r requirements.txt
-mkdocs serve
+npm install
+npm run quartz -- plugin install --from-config
+npm run serve
 ```
 
-默认预览地址为 <http://127.0.0.1:8000>。
+默认预览地址为 `http://localhost:8080`。
+
+`npm run build` 和 `npm run serve` 会在启动前更新首页的页面数、汉字数、历史贡献者及更新记录。历史贡献者来自 Git 提交作者（排除 `root` 和机器人）；若 Git 作者名与 GitHub 用户名不同，在 `scripts/contributors.json` 中补充对应关系。生成名单需要完整的 Git 历史。
 
 ## 从 JSON 构建课程页面
 
 构建脚本会读取 `data` 目录中的 JSON，根据
-[`docs/杂项/template.md`](docs/杂项/template.md) 生成课程 Markdown，并自动把页面加入
-`mkdocs.yml` 的对应导航层级。
+[`content/template.md`](content/template.md) 生成课程 Markdown。Quartz 会按
+`content/` 的目录结构生成页面；侧栏的“25级前”和“26级”视图会对同一课程页面采用不同分类。
+
+课程视图由 [`src/components/CourseViews.tsx`](src/components/CourseViews.tsx) 维护。新增课程时，先按“25级前”分类建立页面；若 26 级分类不同，在该文件的 `changes` 中记录页面 slug 与新分类。尚无页面的新课程列在 `missingCourses`。站点会记住读者选择的视图，课程页面的分类标签也随之切换。课程内容中的学分、推荐学期等历史信息仍需按实际适用年级注明。
 
 完整的数据示例见
 [`scripts/course_data.example.json`](scripts/course_data.example.json)。可以先创建自己的数据文件：
@@ -40,7 +58,6 @@ cp scripts/course_data.example.json data/新课程.json
 ```json
 {
   "title": "新课程",
-  "nav_title": "新课程",
   "en_title": "New Course",
   "category": "专业必修",
   "credits": 2.5,
@@ -58,8 +75,7 @@ cp scripts/course_data.example.json data/新课程.json
 }
 ```
 
-除 `title` 外，其余字段都可以省略。`nav_title` 用于自定义 `mkdocs.yml` 中显示的名称；
-课程简介等文本字段可以直接包含 Markdown。`teachers` 必须是学期对象数组，每个对象通过
+除 `title` 外，其余字段都可以省略。课程简介等文本字段可以直接包含 Markdown。`teachers` 必须是学期对象数组，每个对象通过
 `term` 指定学期，通过 `items` 列出该学期的任课教师。成绩构成、多级列表、外链和回忆卷的
 写法请参考完整示例。
 
@@ -118,20 +134,11 @@ cp scripts/course_data.example.json data/新课程.json
 }
 ```
 
-支持的 `category` 及默认输出目录：
-
-| `category` | 输出目录 |
-| --- | --- |
-| `专业基础` | `docs/专业基础/` |
-| `专业必修` | `docs/专业必修/` |
-| `专业进阶` | `docs/专业进阶/` |
-| `实践教学` | `docs/实践教学/` |
-| `专业选修-应用基础` | `docs/专业选修/应用基础类/` |
-| `专业选修-实践拓展` | `docs/专业选修/实践拓展类/` |
+支持的 `category` ：`专业基础`、`专业必修`、`专业进阶`、`实践教学`、`专业选修-应用基础`、`专业选修-实践拓展`
 
 ### 校验与构建
 
-校验 `data/**/*.json` 并预览目标页面和导航变化，不写入文件：
+校验 `data/**/*.json` 并预览目标页面路径，不写入文件：
 
 ```bash
 python scripts/build_course_md.py --check
@@ -149,7 +156,7 @@ python scripts/build_course_md.py data/新课程.json
 python scripts/build_course_md.py data/新课程.json --force
 ```
 
-只在终端预览生成的 Markdown，不写页面或导航：
+只在终端预览生成的 Markdown，不写入页面：
 
 ```bash
 python scripts/build_course_md.py data/新课程.json --stdout
@@ -158,7 +165,7 @@ python scripts/build_course_md.py data/新课程.json --stdout
 每个 JSON 文件只能包含一个课程对象。一门课程对应一个 JSON 文件和一个生成的 Markdown 页面；
 需要构建多门课程时，请在 `data` 目录中分别创建多个 JSON 文件。
 
-构建完成后直接运行 `mkdocs serve`，新课程就会出现在站点导航中。
+构建完成后直接运行 `npm run serve`，新课程就会出现在站点导航中。
 
 ### 从现有 Markdown 导出 JSON
 
@@ -174,8 +181,8 @@ python scripts/export_course_json.py --check
 python scripts/export_course_json.py
 ```
 
-脚本只处理带有 `course-tags` 的课程页面，并保持与 `docs` 相同的目录层级。一个 Markdown
-对应一个 JSON；`docs/index.md`、`docs/杂项/` 等非课程页面会被忽略。目标 JSON 已存在时，
+脚本只处理带有 `course-tags` 的课程页面，并保持与 `content` 相同的目录层级。一个 Markdown
+对应一个 JSON；`content/Welcome to ISYS.md` 等非课程页面会被忽略。目标 JSON 已存在时，
 需要使用 `--force` 才会重新导出：
 
 ```bash
@@ -184,25 +191,24 @@ python scripts/export_course_json.py --force
 
 ## 删除课程页面
 
-删除脚本会同时删除课程 Markdown 和 `mkdocs.yml` 中对应的导航项；如果某个导航分组已经没有课程，
-也会清理该空分组。
+删除脚本会同时删除 Quartz `content/` 中的课程 Markdown 页面。
 
 建议先检查：
 
 ```bash
-python scripts/delete_course_md.py docs/专业必修/新课程.md --check
+python scripts/delete_course_md.py content/新课程.md --check
 ```
 
-确认后删除课程 Markdown 和对应导航项：
+确认后删除课程 Markdown。课程目录会在下次构建时自动更新：
 
 ```bash
-python scripts/delete_course_md.py docs/专业必修/新课程.md
+python scripts/delete_course_md.py content/新课程.md
 ```
 
-页面已经不存在、只需要清理残留导航时使用：
+页面已经不存在、需要忽略缺失错误时使用：
 
 ```bash
-python scripts/delete_course_md.py docs/专业必修/新课程.md --missing-ok
+python scripts/delete_course_md.py content/新课程.md --missing-ok
 ```
 
 构建命令支持传入多个 JSON 文件，删除命令支持传入多个 Markdown 路径。其他选项可以通过

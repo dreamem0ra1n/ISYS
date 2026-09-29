@@ -12,7 +12,7 @@ import urllib.request
 
 
 # 头像尺寸（像素）、GitHub API 分页大小与请求超时（秒）。
-AVATAR_SIZE = 64
+AVATAR_SIZE = 96
 GITHUB_API_PER_PAGE = 100
 GITHUB_API_TIMEOUT = 5
 
@@ -155,6 +155,7 @@ def render_changelog(commits, repo_url='', avatars=None):
 # 为每个提交作者解析头像地址，返回 {邮箱: 头像地址} 索引。
 def build_avatar_index(commits, repo_url, repo_dir, limit):
     cache = load_avatar_cache()
+    known_users = load_known_users()
     index = {}
     pending = {}
 
@@ -162,7 +163,10 @@ def build_avatar_index(commits, repo_url, repo_dir, limit):
         key = avatar_key(commit)
         if key in index or key in pending:
             continue
+        login = known_users.get(commit['author'].lower())
         url = cache.get(key) or noreply_avatar_url(commit['email'])
+        if not url and login:
+            url = f'https://github.com/{urllib.parse.quote(login, safe="[]")}.png?size={AVATAR_SIZE}'
         if url:
             index[key] = url
         else:
@@ -176,6 +180,12 @@ def build_avatar_index(commits, repo_url, repo_dir, limit):
                 index[key] = url
 
     return index
+
+
+def load_known_users():
+    path = os.path.join(project_dir(), 'scripts', 'contributors.json')
+    with open(path, 'r', encoding='utf-8') as fh:
+        return {name.lower(): login for name, login in json.load(fh).items()}
 
 
 # 读取可选的本地头像缓存文件，缺失或损坏时返回空索引。
@@ -338,7 +348,7 @@ def render_avatar(commit, avatars):
     if url:
         return (
             f'<img class="changelog-avatar" src="{html.escape(url, quote=True)}"'
-            f' alt="{label}" title="{label}" width="20" height="20" loading="lazy">'
+            f' alt="{label}" title="{label}" width="28" height="28" loading="lazy">'
         )
     return (
         '<span class="changelog-avatar changelog-avatar-letter"'

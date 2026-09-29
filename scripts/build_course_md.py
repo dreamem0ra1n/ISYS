@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build course Markdown pages from JSON data and docs/杂项/template.md.
+"""Build course Markdown pages from JSON data and content/template.md.
 
 Run ``python scripts/build_course_md.py --help`` for command-line usage.  A
 complete input example lives in ``scripts/course_data.example.json``.
@@ -23,9 +23,8 @@ from typing import Any
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 DEFAULT_DATA_DIR = PROJECT_DIR / "data"
-DEFAULT_DOCS_DIR = PROJECT_DIR / "docs"
-DEFAULT_TEMPLATE = DEFAULT_DOCS_DIR / "杂项" / "template.md"
-DEFAULT_MKDOCS_CONFIG = PROJECT_DIR / "mkdocs.yml"
+DEFAULT_DOCS_DIR = PROJECT_DIR / "content"
+DEFAULT_TEMPLATE = DEFAULT_DOCS_DIR / "template.md"
 
 CATEGORY_INFO = {
     "专业基础": ("basic", "专业基础", "专业基础"),
@@ -88,12 +87,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="JSON 文件；不指定时递归读取 data 目录中的所有 .json 文件",
     )
     parser.add_argument("--template", type=Path, default=DEFAULT_TEMPLATE)
-    parser.add_argument("--docs-dir", type=Path, default=DEFAULT_DOCS_DIR)
     parser.add_argument(
-        "--mkdocs-config",
-        type=Path,
-        default=DEFAULT_MKDOCS_CONFIG,
-        help="需要同步更新导航的 MkDocs 配置文件",
+        "--content-dir", "--docs-dir", dest="docs_dir", type=Path, default=DEFAULT_DOCS_DIR
     )
     parser.add_argument(
         "-o",
@@ -232,7 +227,10 @@ def render_template_header(template: str, data: dict[str, Any]) -> str:
 
     output = []
     generic_tag_slot = 0
-    for line in prefix.splitlines():
+    prefix_lines = prefix.splitlines()
+    index = 0
+    while index < len(prefix_lines):
+        line = prefix_lines[index]
         stripped = line.strip()
         if re.match(r"^comments\s*:", stripped):
             replacement = f"comments: {str(comments).lower()}"
@@ -258,12 +256,18 @@ def render_template_header(template: str, data: dict[str, Any]) -> str:
             generic_tag_slot += 1
             if details:
                 output.append(render_tag_line(line, details[0], details[1]))
-        elif stripped.startswith('!!! note "培养方案推荐修读学期'):
+        elif stripped.startswith("> [!note] 培养方案推荐修读学期"):
             if semester:
-                safe_semester = semester.replace('"', '&quot;')
-                output.append(f'!!! note "培养方案推荐修读学期：**{safe_semester}**"')
+                output.append(f"> [!note] 培养方案推荐修读学期：**{semester}**")
         else:
             output.append(line)
+        if (
+            stripped.startswith("> [!note] 培养方案推荐修读学期")
+            and index + 1 < len(prefix_lines)
+            and prefix_lines[index + 1].strip() == ">"
+        ):
+            index += 1
+        index += 1
 
     header = "\n".join(output).rstrip()
     if "【" in header or "】" in header:
@@ -286,7 +290,7 @@ def render_notes(value: Any) -> str:
     rendered = []
     for index, note in enumerate(notes):
         if isinstance(note, str):
-            rendered.append(f'!!! note "{note.replace(chr(34), "&quot;")}"')
+            rendered.append(f"> [!note] {note.replace(chr(34), '')}")
             continue
         if not isinstance(note, dict) or not note.get("title"):
             raise BuildError(f"notes[{index}] 必须是字符串或含 title 的对象")
@@ -297,11 +301,11 @@ def render_notes(value: Any) -> str:
             raise BuildError(f"notes[{index}].type 格式无效")
         title = scalar(note["title"], f"notes[{index}].title")
         title = title.replace('"', '&quot;')
-        block = [f'!!! {admonition_type} "{title}"']
+        block = [f"> [!{admonition_type}] {title}"]
         content = note.get("content")
         if content:
             block.extend(
-                f"    {line}" if line else ""
+                f"> {line}" if line else ">"
                 for line in scalar(content, f"notes[{index}].content").splitlines()
             )
         rendered.append("\n".join(block))
@@ -473,14 +477,14 @@ def render_course(data: dict[str, Any], template: str) -> str:
 
     return "\n\n".join([header, *sections]).rstrip() + "\n"
 
-# 检查路径是否为 docs 目录内的相对路径，防止目录遍历攻击
+# 检查路径是否为 content 目录内的相对路径，防止目录遍历攻击
 def safe_relative_path(value: str, field: str) -> Path:
     path = Path(value)
     if path.is_absolute() or ".." in path.parts:
-        raise BuildError(f"{field} 必须是 docs 目录内的相对路径")
+        raise BuildError(f"{field} 必须是 content 目录内的相对路径")
     return path
 
-# 根据 JSON 数据和 docs_dir 计算输出 Markdown 文件的路径，优先使用 output 字段，否则根据 title 和 category 生成路径
+# 根据 JSON 数据和内容目录计算输出 Markdown 文件的路径，优先使用 output 字段，否则根据 title 和 category 生成路径
 def output_path(data: dict[str, Any], docs_dir: Path) -> Path:
     explicit = optional_scalar(data, "output")
     if explicit:
@@ -493,8 +497,7 @@ def output_path(data: dict[str, Any], docs_dir: Path) -> Path:
     if title in {".", ".."} or any(char in title for char in "/\\\0"):
         raise BuildError("title 不能包含路径分隔符")
     category = category_details(data.get("category"))
-    relative_dir = safe_relative_path(category[2], "category.path") if category else Path()
-    return docs_dir / relative_dir / f"{title}.md"
+    return docs_dir / f"{title}.md"
 
 # 原子性写入文件
 def atomic_write(path: Path, content: str) -> None:
@@ -520,10 +523,6 @@ def read_text(path: Path, label: str) -> str:
     except OSError as exc:
         raise BuildError(f"无法读取 {label} {path}: {exc}") from exc
 
-# 将字符串值转换为 YAML 标量，使用 JSON 转义规则
-def yaml_scalar(value: str) -> str:
-    return json.dumps(value, ensure_ascii=False)
-
 # 解析 YAML 标量值，支持单引号、双引号和注释
 def parse_yaml_scalar(value: str) -> str:
     value = value.strip()
@@ -537,195 +536,12 @@ def parse_yaml_scalar(value: str) -> str:
         return value[1:-1].replace("''", "'")
     return value.split(" #", 1)[0].rstrip()
 
-# 解析导航项，返回缩进、标题和页面路径，如果不是有效的导航项则返回 None
-def parse_nav_item(line: str) -> tuple[int, str, str | None] | None:
-    stripped = line.lstrip(" ")
-    if not stripped.startswith("- "):
-        return None
-    indent = len(line) - len(stripped)
-    mapping = stripped[2:].rstrip()
-    if ":" not in mapping:
-        return None
-    key, value = mapping.rsplit(":", 1)
-    key = parse_yaml_scalar(key)
-    value = value.strip()
-    return indent, key, parse_yaml_scalar(value) if value else None
-
-# 查找 nav 配置块的起止行索引，如果找不到则抛出 BuildError
-def nav_bounds(lines: list[str]) -> tuple[int, int]:
-    start = next(
-        (index for index, line in enumerate(lines) if line.strip() == "nav:"),
-        None,
-    )
-    if start is None:
-        raise BuildError("mkdocs.yml 中找不到 nav 配置")
-    end = len(lines)
-    for index in range(start + 1, len(lines)):
-        line = lines[index]
-        if line and not line[0].isspace() and not line.lstrip().startswith("#"):
-            end = index
-            break
-    return start, end
-
-# 计算 nav 配置块中所有导航项的最小缩进，如果没有有效项则返回 2
-def nav_root_indent(lines: list[str], start: int, end: int) -> int:
-    indents = []
-    for line in lines[start + 1 : end]:
-        item = parse_nav_item(line)
-        if item:
-            indents.append(item[0])
-    return min(indents) if indents else 2
-
-# 查找 nav 配置块中某个导航项的结束行索引，返回下一个同级或上级项的行索引，如果没有则返回 nav 块结束行
-def nav_block_end(lines: list[str], index: int, nav_end: int) -> int:
-    item = parse_nav_item(lines[index])
-    if not item:
-        return index + 1
-    indent = item[0]
-    for cursor in range(index + 1, nav_end):
-        line = lines[cursor]
-        if not line.strip() or line.lstrip().startswith("#"):
-            continue
-        next_item = parse_nav_item(line)
-        next_indent = next_item[0] if next_item else len(line) - len(line.lstrip(" "))
-        if next_indent <= indent:
-            return cursor
-    return nav_end
-
-# 计算 nav 配置块中插入新项的行索引，返回父项结束行或 nav 块结束行之前的第一个非空行索引
-def nav_insertion_index(
-    lines: list[str], parent_index: int | None, start: int, end: int
-) -> int:
-    boundary = end if parent_index is None else nav_block_end(
-        lines, parent_index, end
-    )
-    minimum = start + 1 if parent_index is None else parent_index + 1
-    while boundary > minimum and not lines[boundary - 1].strip():
-        boundary -= 1
-    return boundary
-
-# 计算 nav 配置块中子项的缩进，如果没有子项则返回父项缩进加 2 或根级缩进加 4
-def child_indent(
-    lines: list[str], parent_index: int | None, start: int, end: int
-) -> int:
-    root_indent = nav_root_indent(lines, start, end)
-    if parent_index is None:
-        return root_indent
-    parent = parse_nav_item(lines[parent_index])
-    if not parent:
-        raise BuildError("mkdocs.yml 的 nav 层级格式无法识别")
-    parent_indent = parent[0]
-    parent_end = nav_block_end(lines, parent_index, end)
-    descendants = []
-    for line in lines[parent_index + 1 : parent_end]:
-        item = parse_nav_item(line)
-        if item and item[0] > parent_indent:
-            descendants.append(item[0])
-    if descendants:
-        return min(descendants)
-    return parent_indent + (4 if parent_indent == root_indent else 2)
-
-# 在 nav 配置块中查找指定名称的导航组，返回其行索引，如果找不到则返回 None
-def find_nav_group(
-    lines: list[str],
-    name: str,
-    parent_index: int | None,
-    start: int,
-    end: int,
-) -> int | None:
-    expected_indent = child_indent(lines, parent_index, start, end)
-    search_start = start + 1 if parent_index is None else parent_index + 1
-    search_end = end if parent_index is None else nav_block_end(lines, parent_index, end)
-    for index in range(search_start, search_end):
-        item = parse_nav_item(lines[index])
-        if item == (expected_indent, name, None):
-            return index
-    return None
-
-# 渲染 nav 配置块中的一行，返回缩进、标题和页面路径
-def render_nav_line(indent: int, title: str, page: str | None = None) -> str:
-    if page is None:
-        return f"{' ' * indent}- {yaml_scalar(title)}:"
-    return f"{' ' * indent}- {yaml_scalar(title)}: {yaml_scalar(page)}"
-
-# 在 nav 配置块中添加或更新导航项，如果已存在则更新标题，否则新增项，返回更新后的配置和操作结果
-def add_nav_entry(config: str, title: str, page: str) -> tuple[str, str]:
-    lines = config.splitlines()
-    start, end = nav_bounds(lines)
-
-    for index in range(start + 1, end):
-        item = parse_nav_item(lines[index])
-        if not item or item[2] != page:
-            continue
-        if item[1] == title:
-            return config, "已存在"
-        lines[index] = render_nav_line(item[0], title, page)
-        return "\n".join(lines) + "\n", "已更新标题"
-
-    directories = list(Path(page).parts[:-1])
-    parent_index = None
-    for offset, directory in enumerate(directories):
-        group_index = find_nav_group(lines, directory, parent_index, start, end)
-        if group_index is not None:
-            parent_index = group_index
-            continue
-
-        insert_at = nav_insertion_index(lines, parent_index, start, end)
-        indent = child_indent(lines, parent_index, start, end)
-        new_lines = []
-        for remaining in directories[offset:]:
-            new_lines.append(render_nav_line(indent, remaining))
-            indent += 4 if indent == nav_root_indent(lines, start, end) else 2
-        new_lines.append(render_nav_line(indent, title, page))
-        lines[insert_at:insert_at] = new_lines
-        return "\n".join(lines) + "\n", "已新增"
-
-    insert_at = nav_insertion_index(lines, parent_index, start, end)
-    indent = child_indent(lines, parent_index, start, end)
-    lines.insert(insert_at, render_nav_line(indent, title, page))
-    return "\n".join(lines) + "\n", "已新增"
-
-# 在 nav 配置块中删除指定页面的导航项，如果该项不存在则不做任何操作，返回更新后的配置和删除的项数
-def remove_nav_entry(config: str, page: str) -> tuple[str, int]:
-    lines = config.splitlines()
-    start, end = nav_bounds(lines)
-    matches = []
-    for index in range(start + 1, end):
-        item = parse_nav_item(lines[index])
-        if item and item[2] == page:
-            matches.append(index)
-    for index in reversed(matches):
-        lines.pop(index)
-
-    if not matches:
-        return config, 0
-
-    while True:
-        start, end = nav_bounds(lines)
-        removed_group = False
-        for index in range(end - 1, start, -1):
-            item = parse_nav_item(lines[index])
-            if not item or item[2] is not None:
-                continue
-            block_end = nav_block_end(lines, index, end)
-            has_child = any(
-                parse_nav_item(line) is not None
-                for line in lines[index + 1 : block_end]
-            )
-            if not has_child:
-                lines.pop(index)
-                removed_group = True
-                break
-        if not removed_group:
-            break
-    return "\n".join(lines) + "\n", len(matches)
-
-# 将输出路径转换为相对于 docs 目录的路径，并检查是否在 docs 目录内，确保使用 .md 扩展名
+# 将输出路径转换为相对于 content 目录的路径，并检查是否在内容目录内，确保使用 .md 扩展名
 def relative_docs_path(path: Path, docs_dir: Path) -> str:
     try:
         relative = path.resolve().relative_to(docs_dir.resolve())
     except ValueError as exc:
-        raise BuildError(f"输出文件必须位于 docs 目录内：{path}") from exc
+        raise BuildError(f"输出文件必须位于 content 目录内：{path}") from exc
     if relative.suffix.lower() != ".md":
         raise BuildError(f"课程页面必须使用 .md 扩展名：{path}")
     return relative.as_posix()
@@ -736,9 +552,13 @@ def find_inputs(paths: list[Path]) -> list[Path]:
         return paths
     if not DEFAULT_DATA_DIR.is_dir():
         return []
-    return sorted(DEFAULT_DATA_DIR.rglob("*.json"))
+    return sorted(
+        path
+        for path in DEFAULT_DATA_DIR.rglob("*.json")
+        if path != DEFAULT_DATA_DIR / "友链.json"
+    )
 
-# 主函数，解析命令行参数，读取输入 JSON 文件和模板，生成 Markdown 文档，并更新 MkDocs 配置
+# 主函数，解析命令行参数，读取输入 JSON 文件和模板并生成 Markdown 文档。
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     if args.print_example:
@@ -756,25 +576,23 @@ def main(argv: list[str] | None = None) -> int:
         )
     template = read_template(args.template)
 
-    jobs: list[tuple[Path, str, str, str]] = []
+    jobs: list[tuple[Path, str, str]] = []
     for source in input_paths:
         course = read_json(source)
         try:
             destination = output_path(course, args.docs_dir)
             content = render_course(course, template)
-            nav_title = optional_scalar(course, "nav_title")
-            nav_title = nav_title or scalar(course.get("title"), "title")
         except BuildError as exc:
             raise BuildError(f"{source}: {exc}") from exc
-        jobs.append((destination, content, str(source), nav_title))
+        jobs.append((destination, content, str(source)))
 
     if (args.output or args.stdout) and len(jobs) != 1:
         raise BuildError("--output 和 --stdout 只能用于恰好一门课程")
     if args.output:
-        jobs[0] = (args.output, jobs[0][1], jobs[0][2], jobs[0][3])
+        jobs[0] = (args.output, jobs[0][1], jobs[0][2])
 
     seen: dict[Path, str] = {}
-    for destination, _, source, _ in jobs:
+    for destination, _, source in jobs:
         resolved = destination.resolve()
         if resolved in seen:
             raise BuildError(f"{source} 与 {seen[resolved]} 的输出路径相同：{destination}")
@@ -784,31 +602,18 @@ def main(argv: list[str] | None = None) -> int:
         sys.stdout.write(jobs[0][1])
         return 0
 
-    config = read_text(args.mkdocs_config, "MkDocs 配置")
-    original_config = config
-    nav_actions = []
-    for destination, _, _, nav_title in jobs:
-        page = relative_docs_path(destination, args.docs_dir)
-        config, action = add_nav_entry(config, nav_title, page)
-        nav_actions.append((page, action))
-
     if not (args.force or args.check):
-        for destination, _, _, _ in jobs:
+        for destination, _, _ in jobs:
             if not destination.exists():
                 continue
             raise BuildError(f"目标已存在：{destination}；确认后使用 --force 覆盖")
 
-    for destination, content, source, _ in jobs:
+    for destination, content, source in jobs:
         if args.check:
             print(f"OK  {source} -> {destination}")
         else:
             atomic_write(destination, content)
             print(f"生成 {destination}")
-    for page, action in nav_actions:
-        print(f"NAV {action}：{page}")
-    if not args.check and config != original_config:
-        atomic_write(args.mkdocs_config, config)
-        print(f"更新 {args.mkdocs_config}")
     return 0
 
 
