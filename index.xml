@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+    <channel>
+      <title>ISYS</title>
+      <link>https://dreamem0ra1n.github.io/ISYS</link>
+      <description>Last 10 notes on ISYS</description>
+      <generator>Quartz -- quartz.jzhao.xyz</generator>
+      <item>
+    <title>标签索引</title>
+    <link>https://dreamem0ra1n.github.io/ISYS/tags/</link>
+    <guid>https://dreamem0ra1n.github.io/ISYS/tags/</guid>
+    <description><![CDATA[  ]]></description>
+    <pubDate>Tue, 29 Sep 2026 12:39:18 GMT</pubDate>
+  </item><item>
+    <title>26级培养方案概览</title>
+    <link>https://dreamem0ra1n.github.io/ISYS/26%E7%BA%A7%E5%9F%B9%E5%85%BB%E6%96%B9%E6%A1%88%E6%A6%82%E8%A7%88</link>
+    <guid>https://dreamem0ra1n.github.io/ISYS/26%E7%BA%A7%E5%9F%B9%E5%85%BB%E6%96%B9%E6%A1%88%E6%A6%82%E8%A7%88</guid>
+    <description><![CDATA[ 26级培养方案概览 个人解析， 并不权威，欢迎纠错和讨论。时效性有限，培养方案请以教务网最新公布的版本为准。 关于2026级本科新生第一学年秋冬学期选课的通知已经发布，本着对26级变化的好奇，我看了一下26级信安培养方案，发现大一下预置依旧吓人，所以决定简单记录一下培养方案的变化情况，以及做一个概览。 培养方案课程变化 这里只列出专业课程的变化。 专业基础课程 新增/变化： 数据结构基础（fds）+高级数据结构与算法分析（ads）：2.5学分和4学分的课程被合并为一门4学分的《数据结构与算法》。 专业必修课程 新增/变化： 计算机系统贯通课程三部曲：从每门5.5学分减少到了每门4.5学分，每周... ]]></description>
+    <pubDate>Tue, 29 Sep 2026 12:22:11 GMT</pubDate>
+  </item><item>
+    <title>Welcome to ISYS</title>
+    <link>https://dreamem0ra1n.github.io/ISYS/</link>
+    <guid>https://dreamem0ra1n.github.io/ISYS/</guid>
+    <description><![CDATA[ 前言 第一版 本站(ISYS)旨在整合一些信安(is)专业课的相关资源！ 受益于图灵班学习指南、ZJU CS - All Sum in One!和求是潮 zju-icicles等优质项目，笔者得以轻松地获取一些课程的信息。但是，笔者发现受限于专业人数较少以及近些年课改带来的变化，is的课程资料相对比较分散，并且前辈们公开的资料并不是那么容易就能找到和找全的————那么，为什么is不能有一个自己的“学习指南”或是“asio”呢？因而我决定自建一个is专属的资源站。 欢迎任何贡献和斧正！ 第二版 恭喜你，在浩如烟海的信息里找到了这段序言^^ 放在网络上的东西，迟早有一天会过期，但留下些记录未尝不是... ]]></description>
+    <pubDate>Tue, 29 Sep 2026 12:22:11 GMT</pubDate>
+  </item><item>
+    <title>专题研讨</title>
+    <link>https://dreamem0ra1n.github.io/ISYS/%E4%B8%93%E9%A2%98%E7%A0%94%E8%AE%A8</link>
+    <guid>https://dreamem0ra1n.github.io/ISYS/%E4%B8%93%E9%A2%98%E7%A0%94%E8%AE%A8</guid>
+    <description><![CDATA[  专业选修-实践拓展 2学分 玉泉 CS3219M 培养方案推荐修读学期： 大三秋冬 课程简介 摘自教务网： 本课程主要让本科生高年级学生了解混合现实技术的基本原理、应用背景和实现技术。通过本课程的学习和课外文献阅读，让学生对虚拟环境的建模和绘制、现实环境的影像计算、虚实环境的三维注册和交互融合的实现方法有一个初步的了解，并尝试自己独立编程研发一个简单的演示系统。 任课教师 鲍虎军 教材信息 （暂未填充） 成绩构成 期中课程作业 50% 文献阅读、技术分析和构想（第九周前提交） 评分标准： 技术时效性与深入性35%：是否围绕期末研讨课题开展新技术的分析，分析的深入程度 文献资料完善程度25%：... ]]></description>
+    <pubDate>Tue, 29 Sep 2026 12:22:11 GMT</pubDate>
+  </item><item>
+    <title>人工智能安全</title>
+    <link>https://dreamem0ra1n.github.io/ISYS/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%AE%89%E5%85%A8</link>
+    <guid>https://dreamem0ra1n.github.io/ISYS/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%AE%89%E5%85%A8</guid>
+    <description><![CDATA[  专业进阶 2.5学分 玉泉 CS3160M 培养方案推荐修读学期： 大三春夏 课程简介 摘自教务网： 人工智能技术已广泛应用于工业、医疗、交通、安防等行业，推动了产业的智能化变革。然而，人工智能技术的内在脆弱性以及缺乏可解释性，导致人工智能系统面临着严峻的安全威胁。本课程主要讲授人工智能安全的基本概念和研究进展，以人工智能系统面临的安全事件为起点，介绍人工智能安全涵盖的主流研究方向，从鲁棒性、完整性、隐私性、公平性、可解释性等多个角度展开，详细介绍人工智能技术面临的安全威胁和防御手段。课程设置实验教学，邀请蚂蚁金服的安全专家共同讲授，通过AI安全攻防演练，提高学生的代码能力和实践能力，深化学... ]]></description>
+    <pubDate>Tue, 29 Sep 2026 12:22:11 GMT</pubDate>
+  </item><item>
+    <title>信息安全产业实践</title>
+    <link>https://dreamem0ra1n.github.io/ISYS/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E4%BA%A7%E4%B8%9A%E5%AE%9E%E8%B7%B5</link>
+    <guid>https://dreamem0ra1n.github.io/ISYS/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E4%BA%A7%E4%B8%9A%E5%AE%9E%E8%B7%B5</guid>
+    <description><![CDATA[  实践教学 2.5学分 玉泉 CS2270M 培养方案推荐修读学期： 大二短 该课程为新设课程，24级起在培养方案里出现 课程简介 摘自教务网： 作为数字经济和信息社会的核心资源，数据被誉为“21世纪的石油”。2020 年我国首次将“数据”与土地、劳动力、资本、技术等传统要素并列为要素之一，提出要加快培育数据要素市场。从商业的视角来看，数据成为新的生产要素，表明数据和当今其他物质商品一样被货币化——数据不再只是制造下游产品的基础，而是产品本身。在数据货币化浪潮的推动下，数据要素市场（或简称 “数据市场”）应运而生。数据市场是计算机科学、信息安全和经济学的一个新兴交叉学科，正在迅速发展。 本课程... ]]></description>
+    <pubDate>Tue, 29 Sep 2026 12:22:11 GMT</pubDate>
+  </item><item>
+    <title>信息安全原理与数学基础</title>
+    <link>https://dreamem0ra1n.github.io/ISYS/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%8E%9F%E7%90%86%E4%B8%8E%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80</link>
+    <guid>https://dreamem0ra1n.github.io/ISYS/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%8E%9F%E7%90%86%E4%B8%8E%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80</guid>
+    <description><![CDATA[  专业必修 4学分 紫金港 CS1035M 培养方案推荐修读学期： 大一春夏 课程简介 请不要与“信息安全原理”（课程号CS2093M）弄混！ 说是信息安全原理，但其实主要是数学课————它是一门离散数学加概率论的“拼好课”（也就是为什么信安不修概统和离散），前半学期由张秉晟老师讲解离散数学，后半学期由秦湛老师讲解概率论。 任课教师 秦湛（概率论部分） 张秉晟（离散数学部分） 教材信息 （暂未填充） 成绩构成 作业（50%）：学在浙大，每周布置作业（共7个，每个7-8分） 期末（40%） 出勤（10%）：助教记录 相关资源 外链索引 【2024-2025春夏】信息安全原理与数学基础 笔记（25... ]]></description>
+    <pubDate>Tue, 29 Sep 2026 12:22:11 GMT</pubDate>
+  </item><item>
+    <title>信息安全管理</title>
+    <link>https://dreamem0ra1n.github.io/ISYS/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86</link>
+    <guid>https://dreamem0ra1n.github.io/ISYS/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86</guid>
+    <description><![CDATA[  专业选修-应用基础 2学分 紫金港 CS3200M 培养方案推荐修读学期： 大三夏 该课程不在23级及以前的培养方案里 课程简介 摘自教务网： 本课程主要讨论信息安全管理体系，以及如何建设实现信息安全管理体系。信息安全管理是通过维护信息的机密性、完整性和可用性等，来管理和保护信息资产的一项体制，是对信息安全保障进行指导、规范和管理的一系列活动和过程。 信息安全管理是信息安全保障体系建设的重要组成部分。本课程重点从信息安全管理体系、信息安全风险管理、信息安全策略管理、组织与人员安全管理、环境与实体安全管理、系统开发安全管理、运行与操作安全管理、安全监测与舆情分析和应急响应处置管理。本课程通过课... ]]></description>
+    <pubDate>Tue, 29 Sep 2026 12:22:11 GMT</pubDate>
+  </item><item>
+    <title>信息安全课程综合实践(CTF101)</title>
+    <link>https://dreamem0ra1n.github.io/ISYS/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E8%AF%BE%E7%A8%8B%E7%BB%BC%E5%90%88%E5%AE%9E%E8%B7%B5(ctf101)</link>
+    <guid>https://dreamem0ra1n.github.io/ISYS/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E8%AF%BE%E7%A8%8B%E7%BB%BC%E5%90%88%E5%AE%9E%E8%B7%B5(ctf101)</guid>
+    <description><![CDATA[  实践教学 2.5学分 紫金港 CS1264M 培养方案推荐修读学期： 大一短 课程简介 CTF101是信安从24级起加入培养方案的一门短学期课程，AAA的前辈们会在为期两周的课程内为同学们讲解CTF五大方向————crypto、misc、pwn、reverse、web的基础知识。 课程安排：第一周由导论课+5个方向的基础课组成，第二周将是5个方向的专题课+专家分享/课程总结。 任课教师 常瑞 申文博 教材信息 无教材 成绩构成 考勤（5%） 允许线上上课，但需要提前说明，不影响成绩 没有提前说明 / 请假，缺勤会扣一定分数 基础周（55%） Lab 0 全部完成（5%） 五个方向每个方向 L... ]]></description>
+    <pubDate>Tue, 29 Sep 2026 12:22:11 GMT</pubDate>
+  </item><item>
+    <title>区块链与数字货币</title>
+    <link>https://dreamem0ra1n.github.io/ISYS/%E5%8C%BA%E5%9D%97%E9%93%BE%E4%B8%8E%E6%95%B0%E5%AD%97%E8%B4%A7%E5%B8%81</link>
+    <guid>https://dreamem0ra1n.github.io/ISYS/%E5%8C%BA%E5%9D%97%E9%93%BE%E4%B8%8E%E6%95%B0%E5%AD%97%E8%B4%A7%E5%B8%81</guid>
+    <description><![CDATA[  【】 【】 【】 【】 培养方案推荐修读学期： 【】 课程简介 【】 课程安排 【】 任课教师 【】 教材信息 【】 【】 成绩构成 【】 相关资源 外链索引 【】（简介） 回忆卷 【】 【】 【】 . ]]></description>
+    <pubDate>Tue, 29 Sep 2026 12:22:11 GMT</pubDate>
+  </item>
+    </channel>
+  </rss>
