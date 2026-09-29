@@ -6,8 +6,6 @@ on:
       - main
 permissions:
   contents: write
-  pages: write
-  id-token: write
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -21,8 +19,8 @@ jobs:
       - run: npm ci
       - run: node quartz/bootstrap-cli.mjs plugin install --from-config
       - run: npm run build
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      - uses: peaceiris/actions-gh-pages@v4
         with:
-          path: public
-      - uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          publish_branch: gh-pages
